@@ -1,14 +1,30 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 
-class TransectionForm extends StatelessWidget {
-  TransectionForm({super.key});
+class TransectionForm extends StatefulWidget {
+  final dynamic Function(String, double) onSubmit;
 
+  const TransectionForm(this.onSubmit, {super.key});
+
+  @override
+  State<TransectionForm> createState() => _TransectionFormState();
+}
+
+class _TransectionFormState extends State<TransectionForm> {
   final titleController = TextEditingController();
+
   final valueController = TextEditingController();
+
+  _submitForm() {
+    final title = titleController.text;
+    final value = double.tryParse(valueController.text) ?? 0.0;
+
+    if (title.isEmpty || value <= 0) {
+      return;
+    }
+
+    widget.onSubmit(title, value);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,6 +42,9 @@ class TransectionForm extends StatelessWidget {
             ),
             TextField(
               controller: valueController,
+              keyboardType:
+                  const TextInputType.numberWithOptions(decimal: true),
+              onSubmitted: (value) => _submitForm(),
               decoration: const InputDecoration(
                 labelText: 'Valor (R\$)',
               ),
@@ -37,14 +56,7 @@ class TransectionForm extends StatelessWidget {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.white,
                   ),
-                  onPressed: () {
-                    if (kDebugMode) {
-                      print(titleController.text);
-                    }
-                    if (kDebugMode) {
-                      print(valueController.text);
-                    }
-                  },
+                  onPressed: _submitForm,
                   child: const Text(
                     'Nova Transação',
                     style: TextStyle(
