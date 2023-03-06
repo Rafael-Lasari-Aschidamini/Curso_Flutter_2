@@ -1,10 +1,5 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
-import 'package:projeto_despesas/models/transaction.dart';
-import 'package:intl/intl.dart';
+import 'components/transaction_user.dart';
 
 main() => runApp(const ExpensesApp());
 
@@ -13,29 +8,14 @@ class ExpensesApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       home: MyHomePage(),
     );
   }
 }
 
 class MyHomePage extends StatelessWidget {
-  MyHomePage({super.key});
-
-  final _transaction = [
-    Transaction(
-      id: 'T1',
-      title: 'Conta de Luz',
-      value: 211.30,
-      date: DateTime.now(),
-    ),
-    Transaction(
-      id: 'T2',
-      title: 'Novo Tênis',
-      value: 310.76,
-      date: DateTime.now(),
-    ),
-  ];
+  const MyHomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -51,46 +31,7 @@ class MyHomePage extends StatelessWidget {
               child: Text(' Gráfico'),
             ),
           ),
-          Column(
-            children: _transaction.map((tr) {
-              return Card(
-                  child: Row(
-                children: [
-                  Container(
-                    margin: const EdgeInsets.symmetric(
-                        horizontal: 15, vertical: 10),
-                    decoration: BoxDecoration(
-                        border: Border.all(
-                      color: Colors.purple,
-                      width: 2,
-                    )),
-                    padding: const EdgeInsets.all(5),
-                    child: Text(
-                      'R\$ ${tr.value.toStringAsFixed(2)}',
-                      style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
-                          color: Colors.purple),
-                    ),
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        tr.title,
-                        style: const TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold),
-                      ),
-                      Text(
-                        DateFormat('d MMM y').format(tr.date),
-                        style: const TextStyle(color: Colors.grey),
-                      ),
-                    ],
-                  )
-                ],
-              ));
-            }).toList(),
-          ),
+          const TransactionUser(),
         ],
       ),
     );
