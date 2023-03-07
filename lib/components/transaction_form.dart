@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class TransectionForm extends StatefulWidget {
   final dynamic Function(String, double) onSubmit;
@@ -11,19 +14,35 @@ class TransectionForm extends StatefulWidget {
 }
 
 class _TransectionFormState extends State<TransectionForm> {
-  final titleController = TextEditingController();
-
-  final valueController = TextEditingController();
+  final _titleController = TextEditingController();
+  final _valueController = TextEditingController();
+  DateTime _selectedDate;
 
   _submitForm() {
-    final title = titleController.text;
-    final value = double.tryParse(valueController.text) ?? 0.0;
+    final title = _titleController.text;
+    final value = double.tryParse(_valueController.text) ?? 0.0;
 
     if (title.isEmpty || value <= 0) {
       return;
     }
 
     widget.onSubmit(title, value);
+  }
+
+  _showDatePicker() {
+    showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2020),
+      lastDate: DateTime.now(),
+    ).then((pickedDate) {
+      if (pickedDate == null) {
+        return;
+      }
+      setState(() {
+        _selectedDate = pickedDate;
+      });
+    });
   }
 
   @override
@@ -35,13 +54,13 @@ class _TransectionFormState extends State<TransectionForm> {
         child: Column(
           children: <Widget>[
             TextField(
-              controller: titleController,
+              controller: _titleController,
               decoration: const InputDecoration(
                 labelText: 'Title',
               ),
             ),
             TextField(
-              controller: valueController,
+              controller: _valueController,
               keyboardType:
                   const TextInputType.numberWithOptions(decimal: true),
               onSubmitted: (value) => _submitForm(),
@@ -49,20 +68,36 @@ class _TransectionFormState extends State<TransectionForm> {
                 labelText: 'Valor (R\$)',
               ),
             ),
+            Container(
+              height: 70,
+              child: Row(
+                children: <Widget>[
+                  Text(
+                    _selectedDate == null
+                        ? 'Nenhuma data Definida'
+                        : DateFormat('d/M/Y').format(_selectedDate as DateTime),
+                  ),
+                  TextButton(
+                    style: TextButton.styleFrom(
+                        iconColor: Theme.of(context).primaryColor),
+                    onPressed: _showDatePicker,
+                    child: const Text('Selecione Data'),
+                  ),
+                ],
+              ),
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
+                    textStyle: const TextStyle(
+                      color: Colors.white,
+                    ),
+                    backgroundColor: Colors.purple,
                   ),
                   onPressed: _submitForm,
-                  child: const Text(
-                    'Nova Transação',
-                    style: TextStyle(
-                      color: Colors.purple,
-                    ),
-                  ),
+                  child: const Text('Nova Transação'),
                 ),
               ],
             ),
@@ -70,5 +105,13 @@ class _TransectionFormState extends State<TransectionForm> {
         ),
       ),
     );
+  }
+
+  FutureOr pickedDate(DateTime? value) {}
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+        .add(DiagnosticsProperty<DateTime>('_selectedDate', _selectedDate));
   }
 }
