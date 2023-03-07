@@ -14,48 +14,69 @@ class TransactionList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 300,
-      child: ListView.builder(
-        itemCount: transections.length,
-        itemBuilder: (ctx, index) {
-          final tr = transections[index];
-          return Card(
-              child: Row(
-            children: [
-              Container(
-                margin:
-                    const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                decoration: BoxDecoration(
-                    border: Border.all(
-                  color: Theme.of(context).colorScheme.primary,
-                  width: 2,
-                )),
-                padding: const EdgeInsets.all(5),
-                child: Text(
-                  'R\$ ${tr.value.toStringAsFixed(2)}',
-                  style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20,
-                      color: Colors.purple),
+      child: transections.isEmpty
+          ? Column(
+              children: <Widget>[
+                const SizedBox(
+                  height: 20,
                 ),
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    tr.title,
-                    style: const TextStyle(
-                        fontSize: 16, fontWeight: FontWeight.bold),
+                Text(
+                  'Sem Transação Cadastrada',
+                  style: Theme.of(context).textTheme.headlineSmall,
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                SizedBox(
+                  height: 200,
+                  child: Image.asset(
+                    'assets/images/waiting.png',
+                    fit: BoxFit.cover,
                   ),
-                  Text(
-                    DateFormat('d MMM y').format(tr.date),
-                    style: const TextStyle(color: Colors.grey),
-                  ),
-                ],
-              )
-            ],
-          ));
-        },
-      ),
+                ),
+              ],
+            )
+          : ListView.builder(
+              itemCount: transections.length,
+              itemBuilder: (ctx, index) {
+                final tr = transections[index];
+                return Card(
+                    child: Row(
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.symmetric(
+                          horizontal: 15, vertical: 10),
+                      decoration: BoxDecoration(
+                          border: Border.all(
+                        color: Theme.of(context).colorScheme.primary,
+                        width: 2,
+                      )),
+                      padding: const EdgeInsets.all(5),
+                      child: Text(
+                        'R\$ ${tr.value.toStringAsFixed(2)}',
+                        style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                            color: Colors.purple),
+                      ),
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          tr.title,
+                          style: Theme.of(context).textTheme.headlineSmall,
+                        ),
+                        Text(
+                          DateFormat('d MMM y').format(tr.date),
+                          style: const TextStyle(color: Colors.grey),
+                        ),
+                      ],
+                    )
+                  ],
+                ));
+              },
+            ),
     );
   }
 }
