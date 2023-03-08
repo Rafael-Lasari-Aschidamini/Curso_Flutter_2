@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class TransectionForm extends StatefulWidget {
-  final dynamic Function(String, double) onSubmit;
+  final dynamic Function(String, double, DateTime) onSubmit;
 
   const TransectionForm(this.onSubmit, {super.key});
 
@@ -16,17 +16,17 @@ class TransectionForm extends StatefulWidget {
 class _TransectionFormState extends State<TransectionForm> {
   final _titleController = TextEditingController();
   final _valueController = TextEditingController();
-  DateTime _selectedDate;
+  DateTime _selectedDate = DateTime.now();
 
   _submitForm() {
     final title = _titleController.text;
     final value = double.tryParse(_valueController.text) ?? 0.0;
 
-    if (title.isEmpty || value <= 0) {
+    if (title.isEmpty || value <= 0 || _selectedDate == null) {
       return;
     }
 
-    widget.onSubmit(title, value);
+    widget.onSubmit(title, value, _selectedDate!);
   }
 
   _showDatePicker() {
@@ -72,10 +72,12 @@ class _TransectionFormState extends State<TransectionForm> {
               height: 70,
               child: Row(
                 children: <Widget>[
-                  Text(
-                    _selectedDate == null
-                        ? 'Nenhuma data Definida'
-                        : DateFormat('d/M/Y').format(_selectedDate as DateTime),
+                  Expanded(
+                    child: Text(
+                      _selectedDate == null
+                          ? 'Nenhuma data Definida'
+                          : 'Data Selecionada: ${DateFormat('dd/MM/y').format(_selectedDate!)}',
+                    ),
                   ),
                   TextButton(
                     style: TextButton.styleFrom(
@@ -112,6 +114,6 @@ class _TransectionFormState extends State<TransectionForm> {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties
-        .add(DiagnosticsProperty<DateTime>('_selectedDate', _selectedDate));
+        .add(DiagnosticsProperty<DateTime?>('_selectedDate', _selectedDate));
   }
 }

@@ -40,26 +40,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final List<Transaction> _transaction = [
-    Transaction(
-      id: 'T0',
-      title: 'Juvenil Clube',
-      value: 150.00,
-      date: DateTime.now().subtract(const Duration(days: 33)),
-    ),
-    Transaction(
-      id: 'T1',
-      title: 'Conta de Luz',
-      value: 211.30,
-      date: DateTime.now().subtract(const Duration(days: 3)),
-    ),
-    Transaction(
-      id: 'T2',
-      title: 'Novo Tênis',
-      value: 310.76,
-      date: DateTime.now().subtract(const Duration(days: 4)),
-    ),
-  ];
+  final List<Transaction> _transaction = [];
 
   List<Transaction> get _recentTransactions {
     return _transaction.where((tr) {
@@ -67,18 +48,27 @@ class _MyHomePageState extends State<MyHomePage> {
     }).toList();
   }
 
-  _addTransection(String title, double value) {
+  _addTransection(String title, double value, DateTime date) {
     final newTransaction = Transaction(
-      id: Random().nextDouble().toString(),
-      title: title,
-      value: value,
-      date: DateTime.now(),
+        id: Random().nextDouble().toString(),
+        title: title,
+        value: value,
+        date: date);
+    setState(
+      () {
+        _transaction.add(newTransaction);
+      },
     );
-    setState(() {
-      _transaction.add(newTransaction);
-    });
 
     Navigator.of(context).pop();
+  }
+
+  _removeTransaction(String id) {
+    setState(
+      () {
+        _transaction.removeWhere((tr) => tr.id == id);
+      },
+    );
   }
 
   _opemTransectionFormModal(BuildContext context) {
@@ -91,29 +81,41 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Despesas Pessoais',
-          style: TextStyle(
-              fontFamily: 'OpenSans',
-              fontSize: 30,
-              fontWeight: FontWeight.bold),
-        ),
-        actions: <Widget>[
-          IconButton(
-            onPressed: () => _opemTransectionFormModal(context),
-            icon: const Icon(Icons.add),
-          )
-        ],
+    final appBar = AppBar(
+      title: const Text(
+        'Despesas Pessoais',
       ),
+      actions: <Widget>[
+        IconButton(
+          onPressed: () => _opemTransectionFormModal(context),
+          icon: const Icon(Icons.add),
+        )
+      ],
+    );
+
+    final availabeHight = MediaQuery.of(context).size.height -
+        appBar.preferredSize.height -
+        MediaQuery.of(context).padding.top;
+
+    return Scaffold(
+      appBar: appBar,
       body: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            Chart(_recentTransactions),
-            TransactionList(_transaction, transections: _transaction),
+            Container(
+              height: availabeHight * 0.3,
+              child: Chart(_recentTransactions),
+            ),
+            Container(
+              height: availabeHight * 0.7,
+              child: TransactionList(
+                _transaction,
+                transections: _transaction,
+                onRemove: _removeTransaction,
+              ),
+            ),
           ],
         ),
       ),
