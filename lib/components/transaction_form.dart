@@ -1,8 +1,9 @@
 import 'dart:async';
-
+import 'adaptative_button.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'adaptative_text_fild.dart';
 
 class TransectionForm extends StatefulWidget {
   final dynamic Function(String, double, DateTime) onSubmit;
@@ -47,63 +48,40 @@ class _TransectionFormState extends State<TransectionForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 5,
-      child: Padding(
-        padding: const EdgeInsets.all(10),
-        child: Column(
-          children: <Widget>[
-            TextField(
-              controller: _titleController,
-              decoration: const InputDecoration(
-                labelText: 'Title',
+    return SingleChildScrollView(
+      child: Card(
+        elevation: 5,
+        child: Padding(
+          padding: EdgeInsets.only(
+            top: 10,
+            right: 10,
+            left: 10,
+            bottom: 10 + MediaQuery.of(context).viewInsets.bottom,
+          ),
+          child: Column(
+            children: <Widget>[
+              AdaptativeTextFild(
+                controller: _titleController,
+                label: 'Title',
               ),
-            ),
-            TextField(
-              controller: _valueController,
-              keyboardType:
-                  const TextInputType.numberWithOptions(decimal: true),
-              onSubmitted: (value) => _submitForm(),
-              decoration: const InputDecoration(
-                labelText: 'Valor (R\$)',
+              AdaptativeTextFild(
+                controller: _valueController,
+                keyboardType:
+                    const TextInputType.numberWithOptions(decimal: true),
+                onSubmitted: (value) => _submitForm(),
+                label: 'Valor (R\$)',
               ),
-            ),
-            Container(
-              height: 70,
-              child: Row(
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Expanded(
-                    child: Text(
-                      _selectedDate == null
-                          ? 'Nenhuma data Definida'
-                          : 'Data Selecionada: ${DateFormat('dd/MM/y').format(_selectedDate!)}',
-                    ),
-                  ),
-                  TextButton(
-                    style: TextButton.styleFrom(
-                        iconColor: Theme.of(context).primaryColor),
-                    onPressed: _showDatePicker,
-                    child: const Text('Selecione Data'),
-                  ),
+                  AdaptativeButton(
+                    label: 'Nova Transação',
+                    onPressed: _submitForm,
+                  )
                 ],
               ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    textStyle: const TextStyle(
-                      color: Colors.white,
-                    ),
-                    backgroundColor: Colors.purple,
-                  ),
-                  onPressed: _submitForm,
-                  child: const Text('Nova Transação'),
-                ),
-              ],
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
