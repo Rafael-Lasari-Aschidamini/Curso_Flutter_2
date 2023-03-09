@@ -2,7 +2,7 @@ import 'dart:async';
 import 'adaptative_button.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'adaptative_date_picker.dart';
 import 'adaptative_text_fild.dart';
 
 class TransectionForm extends StatefulWidget {
@@ -27,23 +27,7 @@ class _TransectionFormState extends State<TransectionForm> {
       return;
     }
 
-    widget.onSubmit(title, value, _selectedDate!);
-  }
-
-  _showDatePicker() {
-    showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2020),
-      lastDate: DateTime.now(),
-    ).then((pickedDate) {
-      if (pickedDate == null) {
-        return;
-      }
-      setState(() {
-        _selectedDate = pickedDate;
-      });
-    });
+    widget.onSubmit(title, value, _selectedDate);
   }
 
   @override
@@ -71,6 +55,15 @@ class _TransectionFormState extends State<TransectionForm> {
                 onSubmitted: (value) => _submitForm(),
                 label: 'Valor (R\$)',
               ),
+              AdaptativeDatePicker(
+                  selectedDate: _selectedDate,
+                  onDateChanged: (newDate) {
+                    setState(
+                      () {
+                        _selectedDate = newDate;
+                      },
+                    );
+                  }),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
