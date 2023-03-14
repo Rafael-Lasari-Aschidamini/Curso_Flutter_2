@@ -113,17 +113,45 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
     ];
 
-    final PreferredSizeWidget appBar = Platform.isIOS as PreferredSizeWidget;
-    CupertinoNavigationBar(
-        middle: const Text('Despesas Pessoais'),
-        trailing: Row(
-          children: actions,
-        ));
-    AppBar(
-        title: const Text(
-          'Despesas Pessoais',
-        ),
-        actions: actions);
+    // bool verificarIos = Platform.isIOS;
+    // PreferredSizeWidget appBar;
+
+    // if (verificarIos) {
+    //   appBar = CupertinoNavigationBar(
+    //     middle: const Text(
+    //       'Despesas Pessoais',
+    //     ),
+    //     trailing: Row(
+    //       children: actions,
+    //     ),
+    //   );
+    // } else {
+    //   appBar = AppBar(
+    //     title: const Text(
+    //       'Despesas Pessoais',
+    //     ),
+    //     actions: actions,
+    //   );
+    // }
+
+    // final PreferredSizeWidget appBar = (Platform.isIOS
+    //     ? CupertinoNavigationBar(
+    //         middle: const Text('Despesas Pessoais'),
+    //         trailing: Row(
+    //           children: actions,
+    //         ))
+    //     : AppBar(
+    //         title: const Text(
+    //           'Despesas Pessoais',
+    //         ),
+    //         actions: actions) as PreferredSizeWidget);
+
+    PreferredSizeWidget appBar = AppBar(
+      title: const Text(
+        'Despesas Pessoais',
+      ),
+      actions: actions,
+    );
 
     final availabeHight = mediaQuery.size.height -
         appBar.preferredSize.height -
@@ -135,28 +163,28 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            if (isLandscape)
-              // Row(
-              //   children: <Widget>[
-              //     const Text('Exibir Gráfico'),
-              //     Switch.adaptive(
-              //       activeColor: Theme.of(context).colorScheme.secondary,
-              //       value: _showChart,
-              //       onChanged: (value) {
-              //         setState(
-              //           () {
-              //             _showChart = value;
-              //           },
-              //         );
-              //       },
-              //     ),
-              //   ],
-              // ),
-              if (_showChart || !isLandscape)
-                Container(
-                  height: availabeHight * (isLandscape ? 0.8 : 0.30),
-                  child: Chart(_recentTransactions),
-                ),
+            //if (isLandscape)
+            //   Row(
+            //     children: <Widget>[
+            //       const Text('Exibir Gráfico'),
+            //       Switch.adaptive(
+            //         activeColor: Theme.of(context).colorScheme.secondary,
+            //         value: _showChart,
+            //         onChanged: (value) {
+            //           setState(
+            //             () {
+            //               _showChart = value;
+            //             },
+            //           );
+            //         },
+            //       ),
+            //     ],
+            //   ),
+            if (_showChart || !isLandscape)
+              Container(
+                height: availabeHight * (isLandscape ? 0.8 : 0.30),
+                child: Chart(_recentTransactions),
+              ),
             if (!_showChart || !isLandscape)
               Container(
                 height: availabeHight * (isLandscape ? 1 : 0.7),
